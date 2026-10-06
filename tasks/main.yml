@@ -129,6 +129,7 @@
   ansible.builtin.meta: flush_handlers
 
 - name: Reboot system if changes require it and not skipped
+  when: change_requires_reboot
   block:
     - name: POST | Reboot system if changes require it and not skipped
       when: not skip_reboot
@@ -171,6 +172,8 @@
         mode: 'go-w'
 
     - name: Create ansible facts file and levels applied if audit facts not present
+      tags:
+        - molecule-idempotence-notest
       ansible.builtin.template:
         src: etc/ansible/compliance_facts.j2
         dest: "{{ ansible_facts_path }}/compliance_facts.fact"
